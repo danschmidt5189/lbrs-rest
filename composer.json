@@ -1,6 +1,6 @@
 {
     "name": "lbrs/lbrs-rest",
-    "description": "A Yii1 extension helping write RESTful controllers and models.",
+    "description": "Easily write REST APIs using your existing Yii1 code.",
     "keywords": ["Yii", "REST", "API", "ActiveResource"],
     "authors": [
         {
