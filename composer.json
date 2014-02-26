@@ -5,16 +5,14 @@
     "authors": [
         {
             "name": "Dan Schmidt",
-            "email": "danschmidt5189@gmail.com",
-            "role": "developer"
+            "email": "danschmidt5189@gmail.com"
         }
     ],
     "version": "0.0.1",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Lbrs\\": "src/",
-            "Lbrs\\Rest\\": ""
+            "Lbrs\\Rest": "src/",
         }
     }
 }
