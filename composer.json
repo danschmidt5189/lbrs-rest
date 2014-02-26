@@ -1,0 +1,11 @@
+{
+    "name": "loloroboros/lbrs-rest",
+    "description": "A Yii1 extension helping write RESTful controllers and models.",
+    "version": "0.0.1",
+    "autoload": {
+        "psr-4": {
+            "Lbrs\\": "src/",
+            "Lbrs\\Rest\\": ""
+        }
+    }
+}
