@@ -1,7 +1,16 @@
 {
-    "name": "loloroboros/lbrs-rest",
+    "name": "lbrs/lbrs-rest",
     "description": "A Yii1 extension helping write RESTful controllers and models.",
+    "keywords": ["Yii", "REST", "API", "ActiveResource"],
+    "authors": [
+        {
+            "name": "Dan Schmidt",
+            "email": "danschmidt5189@gmail.com",
+            "role": "developer"
+        }
+    ],
     "version": "0.0.1",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Lbrs\\": "src/",
