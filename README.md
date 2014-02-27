@@ -8,9 +8,9 @@ arbitrary MIME types.
 2. Provide a special Response class that handles common use-cases regarding sending
 resources to the client. (E.g. partials on Ajax, content-type negotiation, etc.)
 
-### ConvertableInterface
+### ConvertibleInterface
 
-The heart of Resource functionality is in the `ConvertableInterface`:
+The heart of Resource functionality is in the `ConvertibleInterface`:
 
 ```php
 /**
@@ -19,9 +19,9 @@ The heart of Resource functionality is in the `ConvertableInterface`:
 public function convertTo($mimeType, $options = array());
 
 /**
- * @return bool Whether the object is convertable to the given type
+ * @return bool Whether the object is convertible to the given type
  */
-public function isConvertableTo($mimeType, $options = array());
+public function isConvertibleTo($mimeType, $options = array());
 ```
 
 The `ResourceInterface` extends this interface with new methods that determine
