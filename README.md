@@ -14,30 +14,39 @@ The goal is:
 resources, handling HTTP-related issues automatically. (E.g. status codes based
 on the resource state.)
 
-### ActiveResource
+### Resources
 
-`ActiveResource << CActiveRecord` exposes methods that convert ActiveRecord objects
-into string representations in different `MIME` types.
+Resources represent classes that implement the `SerializableResourceInterface`.
 
-It implements the `SerializableResourceInterface` using `ActiveResourceTrait`.
-If you don't want to extend from the base class, you can use the trait instead.
-
-Conversion is handled by classes implementing the `ConverterInterface` and is
-completely customizable. Out-of-the-box functionality includes:
+The killer feature of this interface is the ability of objects implementing it
+to represent themselves in any number of arbitrary formats, e.g.:
 
 ```php
 // Attributes, errors, and metadata as JSON
-echo $activeResource->convertTo(MIME::JSON);
-echo json_encode($activeResource);
+echo $resource->convertTo(MIME::JSON);
+echo json_encode($resource);
+
+// Plain serialized
+echo $resource->convertTo(MIME::SERIALIZED_PHP);
+echo serialize($resource);
 
 // Attributes, errors, and metadata as XML
-echo $activeResource->convertTo(MIME::XML);
+echo $resource->convertTo(MIME::XML);
 
 // Renders the resource into 'views/{resourceClass}/show.php'
-echo $activeResource->convertTo(MIME::HTML);
+echo $resource->convertTo(MIME::HTML);
 
 // Partially renders the resource into 'views/{resourceClass}/show.php'
-echo $activeResource->convertTo(MIME::PARTIAL);
+echo $resource->convertTo(MIME::PARTIAL);
+```
+
+Resources also know what types they can be converted to, so that in your controller
+you could do something like this:
+
+```php
+if (!$resource->isConvertibleTo(MIME::JSON)) {
+	throw new NotAcceptableHttpException();
+}
 ```
 
 ### Resource Controller
@@ -87,10 +96,19 @@ public function actionEdit($customerId, array $Customer = null)
 }
 ```
 
+It relies on resources to convert themselves to different string representations
+and also to know what conversions are valid. It delegates to other classes to
+determine what type the request wants to receive and then tries to return the
+resource in that format.
+
 ### MIME / Format
 
 The MIME and Format classes represent information about the type of string data.
 
-A MIME type is an HTTP Content-Type, e.g. "application/json". A Format is a shorthand
-reference to a specific MIME type. A format corresponds to a single MIME type, however
-a MIME type may correspond to multiple Formats.
+A MIME type is an HTTP Content-Type, e.g. "application/json".
+
+A Format is a shorthand reference to a specific MIME type. A format corresponds
+to a single MIME type, however a MIME type may correspond to multiple Formats.
+
+These classes are proposed mainly as helpers, and to negotiate conversion between
+formats and MIME types.
