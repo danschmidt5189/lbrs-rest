@@ -25,13 +25,13 @@ interface ArrayableInterface
 	public function toArray($options = array());
 
 	/**
-	 * Reconstructs a resource from its array representation
+	 * Initializes a resource from its array representation
 	 *
 	 * @param array $arrayed The array representation of the resource. This should
 	 * be the value returned by toArray().
 	 * @param array $options Additional options for the reconstruction process
 	 *
-	 * @return void
+	 * @return void Acts on the resource in-place
 	 *
 	 * @throws Lbrs\Rest\Exception If unable to reconstruct from the given data
 	 */

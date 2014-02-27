@@ -8,9 +8,9 @@
 namespace Lbrs\Rest;
 
 /**
- * Interface for resources that can be serialized
+ * Interface for resources that support self-serialization
  *
- * This expands the interface to include methods that normalize the implementing
+ * This expands ResourceInterface to include methods that convert the implementing
  * class into arrays and strings, e.g. for serializing and JSON-encoding.
  *
  * @package    lbrs-rest

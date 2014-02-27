@@ -8,7 +8,7 @@
 namespace Lbrs\Rest;
 
 /**
- * Interface for classes that convert resources to strings
+ * Interface for classes that convert data to strings of an arbitrary MIME type
  *
  * @package    lbrs-rest
  * @subpackage interfaces

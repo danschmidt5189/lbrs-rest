@@ -13,7 +13,7 @@ namespace Lbrs\Rest;
  * @package    lbrs-rest
  * @subpackage resources
  */
-abstract class MIME
+class MIME
 {
 	const HTML    = 'text/html';
 	const VIEW    = 'text/html';

@@ -10,6 +10,11 @@ namespace Lbrs\Rest;
 /**
  * Interface for classes that represent a resource
  *
+ * A resource is an abstract datatype that can be represented in multiple formats.
+ * Resources must be able to convert themselves to representations in an arbitrary
+ * format, throwing an Exception when they are unable to do so. In addition, Resources
+ * have the concept of "freshness" and persistence.
+ *
  * @package    lbrs-rest
  * @subpackage interfaces
  */

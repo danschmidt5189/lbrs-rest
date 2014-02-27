@@ -8,7 +8,10 @@
 namespace Lbrs\Rest;
 
 /**
- * Interface for classes that can convert themselves to string representations of different MIME types
+ * Interface for classes that can convert themselves to strings in different formats
+ *
+ * This class is like the native Serializable interface, except that it expects
+ * the implementing class to know how to handle conversion to an arbitrary MIME type.
  *
  * @package    lbrs-rest
  * @subpackage interfaces
