@@ -18,7 +18,7 @@ namespace Lbrs\Rest;
  * @package    lbrs-rest
  * @subpackage interfaces
  */
-interface ResourceInterface extends ConvertableInterface
+interface ResourceInterface extends ConvertibleInterface
 {
 	/**
 	 * Returns the unique resource id

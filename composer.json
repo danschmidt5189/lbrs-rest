@@ -1,7 +1,7 @@
 {
     "name": "loloroboros/lbrs-rest",
-    "description": "Easily write REST APIs using your existing Yii1 code.",
-    "keywords": ["Yii", "REST", "API", "ActiveResource"],
+    "description": "Proposal for REST-related interfaces in Yii2",
+    "keywords": ["Yii", "Yii2", "REST", "API", "ActiveResource"],
     "authors": [
         {
             "name": "Dan Schmidt",

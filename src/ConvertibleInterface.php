@@ -1,6 +1,6 @@
 <?php
 /**
- * ConvertableInterface.php
+ * ConvertibleInterface.php
  *
  * @author Dan Schmidt <danschmidt5189@gmail.com>
  */
@@ -16,7 +16,7 @@ namespace Lbrs\Rest;
  * @package    lbrs-rest
  * @subpackage interfaces
  */
-interface ConvertableInterface
+interface ConvertibleInterface
 {
 	/**
 	 * Represents the object as a string of the given MIME type
@@ -38,5 +38,5 @@ interface ConvertableInterface
 	 *
 	 * @return bool Whether the object can be converted to the given MIME type
 	 */
-	public function isConvertableTo($mimeType, $options = array());
+	public function isConvertibleTo($mimeType, $options = array());
 }

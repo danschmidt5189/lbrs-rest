@@ -1,14 +1,18 @@
-Yii2 REST Support
+Yii2 REST Proposal
 =========
 
-Goals:
+### Goals
 
-1. Provide a simple interface that classes can implement to allow conversion to
-arbitrary MIME types.
-2. Provide a special Response class that handles common use-cases regarding sending
-resources to the client. (E.g. partials on Ajax, content-type negotiation, etc.)
+1. Provide a simple interface for converting models to arbitrary MIME types. (E.g.
+'application/json', 'application/hal+json', etc.) This interface defines a "Resource".
+2. Bake Resource functionality into core classes like Model and ActiveRecord.
+3. Provide a special ResourceResponse class that handles content negotiation and
+formatting automatically.
 
-### ConvertibleInterface
+### ResourceInterface
+
+Resources can be represented in any number of arbitrary formats, and also maintain
+the concept of "freshness" and identity.
 
 The heart of Resource functionality is in the `ConvertibleInterface`:
 
@@ -24,14 +28,10 @@ public function convertTo($mimeType, $options = array());
 public function isConvertibleTo($mimeType, $options = array());
 ```
 
-The `ResourceInterface` extends this interface with new methods that determine
-the ID of the resource as well as its "freshness". (Whether it has been modified
-since a certain time.)
-
 An additional resource, `SerializableResourceInterface`, further extends it with
 the native `Serializable` and `JsonSerializable` interfaces, as well as `Arrayable`.
 
-Some thoughts on usage:
+Some usage ideas:
 
 ```php
 $resource = new ClassImplementingResourceInterface();
@@ -54,8 +54,8 @@ echo $resource->convertTo(MIME::HTML);
 echo $resource->convertTo(MIME::PARTIAL);
 ```
 
-Resources also know what types they can be converted to, so that in your controller
-you could do something like this:
+Resources also know what types they can be converted to. This allows us to do something
+like this in our controllers:
 
 ```php
 if (!$this->resource->isConvertibleTo(MIME::JSON)) {
@@ -63,11 +63,14 @@ if (!$this->resource->isConvertibleTo(MIME::JSON)) {
 }
 ```
 
-### ActiveResource
+### ActiveResource << ActiveRecord
 
 `ActiveResource << yii\db\ActiveRecord` represents ActiveRecord classes that
 are also resources. You get all the sugar of AR, including relational mappings,
 plus the promise that the record can be converted into different formats.
+
+ActiveResource should, out of the box, allow embedding relations or linking to
+them. (Default links determined by convention and ResourceInterface::getResourceId().)
 
 ### ResourceResponse
 
