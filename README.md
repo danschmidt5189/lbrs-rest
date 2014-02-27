@@ -81,6 +81,8 @@ as a response. The default behavior should support:
 2. Rendering views on requests for "text/html".
 3. Rendering partials on requests for "text/partial+html".
 4. Rendering json/xml/etc. on other requests.
+5. Setting the status code based on the state of the resource. (E.g. 422 if the
+resource `hasErrors()`.)
 
 (This is inspired by `Responders` in Ruby on Rails 4.)
 
