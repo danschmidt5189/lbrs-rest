@@ -16,6 +16,7 @@ namespace Lbrs\Rest;
 abstract class MIME
 {
 	const HTML    = 'text/html';
+	const VIEW    = 'text/html';
 	const PARTIAL = 'text/partial+html';
 	const JSON    = 'application/json';
 	const HAL     = 'application/hal+json';

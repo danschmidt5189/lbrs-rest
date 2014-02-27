@@ -76,11 +76,24 @@ trait ActiveResourceTrait
 	 */
 	public function convertTo($mimeType, $options = array())
 	{
-		if (($converter = $this->getConverter($mimeType, $options)) === null) {
+		if (!$this->isConvertableTo($mimeType, $options)) {
 			throw new Exception(sprintf('%s::$converters is not configured for type "%s".', get_class($this), $mimeType));
 		}
 
-		return $converter->convert($this, $mimeType, $options);
+		return $this->getConverter($mimeType, $options)->convert($this, $mimeType, $options);
+	}
+
+	/**
+	 * Returns whether the resource can be converted to the given type
+	 *
+	 * @param string $mimeType The MIME type to check
+	 * @param array $options Additional conversion options
+	 *
+	 * @return bool Whether the resource is convertible to the given type
+	 */
+	public function isConvertableTo($mimeType, $options = array())
+	{
+		return $this->getConverter($mimeType, $options) !== null;
 	}
 
 	/**

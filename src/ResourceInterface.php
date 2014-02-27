@@ -13,7 +13,7 @@ namespace Lbrs\Rest;
  * @package    lbrs-rest
  * @subpackage interfaces
  */
-interface ResourceInterface
+interface ResourceInterface extends ConvertableInterface
 {
 	/**
 	 * Returns the unique resource id
@@ -21,18 +21,6 @@ interface ResourceInterface
 	 * @return mixed The unique resource id, or null if it is not yet persisted
 	 */
 	public function getResourceId();
-
-	/**
-	 * Represents the resource as a string of the given MIME type
-	 *
-	 * @param string $mimeType MIME-type to which the resource is converted
-	 * @param array $options Additional options for the representation
-	 *
-	 * @return string The resource represented in the given type
-	 *
-	 * @throws Lbrs\Rest\Exception If the resource cannot be represented as the given type
-	 */
-	public function convertTo($mimeType, $options = array());
 
 	/**
 	 * Returns whether the resource is fresh as of the given timestamp
