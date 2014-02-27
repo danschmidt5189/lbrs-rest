@@ -7,13 +7,16 @@
 
 namespace Lbrs\Rest;
 
+use Yii;
+use CController;
+
 /**
  * Controller that manages a class of Resources
  *
  * @package    lbrs-rest
  * @subpackage resources
  */
-abstract class ResourceController extends \CController
+abstract class ResourceController extends CController
 {
 	/**
 	 * @var ResponderInterface

@@ -7,6 +7,9 @@
 
 namespace Lbrs\Rest;
 
+use Serializable;
+use JsonSerializable;
+
 /**
  * Interface for resources that support self-serialization
  *
@@ -16,7 +19,7 @@ namespace Lbrs\Rest;
  * @package    lbrs-rest
  * @subpackage interfaces
  */
-interface SerializableResourceInterface extends ResourceInterface, ArrayableInterface, \Serializable, \JsonSerializable
+interface SerializableResourceInterface extends ResourceInterface, ArrayableInterface, Serializable, JsonSerializable
 {
 	//
 }
