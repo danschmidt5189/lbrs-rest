@@ -96,10 +96,36 @@ public function actionEdit($customerId, array $Customer = null)
 }
 ```
 
-It relies on resources to convert themselves to different string representations
-and also to know what conversions are valid. It delegates to other classes to
-determine what type the request wants to receive and then tries to return the
-resource in that format.
+The logic represented above would essentially be equivalent to this:
+
+```php
+public function actionCreate(array $Customer)
+{
+	$customer = new Customer();
+	$customer->setAttributes($Customer);
+	$saved = $customer->save();
+
+	$response = new yii\web\Response();
+
+	if (Yii::$app->request->wants('json')) {
+		$response->format     = 'json';
+		$response->statusCode = $customer->hasErrors() ? 422 : 201;
+		$response->content    = $customer->convertTo(MIME::JSON);
+		return $response;
+	}
+
+	if ($saved) {
+		Yii::$app->user->setFlash('success', 'Customer created!');
+		$this->redirect(['view', 'id' => $customer->id]);
+	} else {
+		Yii::$app->user->setFlash('error', 'Error creating customer...');
+		$this->redirect(['view', 'id' => $customer->id], true, 307);
+	}
+}
+```
+
+... except that the actual logic is delegated to `Responder` classes, which can
+be overridden or customized by developers.
 
 ### MIME / Format
 
