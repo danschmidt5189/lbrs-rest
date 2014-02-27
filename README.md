@@ -10,7 +10,7 @@ The goal is:
 
 1. Model classes that can easily convert themselves to different representations
 (json, xml, html, etc.).
-2. Controllers that can intelligently select the write format in which to return
+2. Controllers that can intelligently select the correct format in which to return
 resources, handling HTTP-related issues automatically. (E.g. status codes based
 on the resource state.)
 
@@ -38,6 +38,53 @@ echo $activeResource->convertTo(MIME::HTML);
 
 // Partially renders the resource into 'views/{resourceClass}/show.php'
 echo $activeResource->convertTo(MIME::PARTIAL);
+```
+
+### Resource Controller
+
+The goal of the ResourceController is to reduce boilerplate code, like sending
+different error formats to JSON requests, setting flash messages, or rendering
+partials on Ajax requests.
+
+Ideally, most actions would just have to load a resource, optionally act on that
+resource (e.g. by invoking a method on it), and then responding with the resource:
+
+```php
+/**
+ * Creates a new customer in the database
+ *
+ * @param array $Customer Customer attributes (@post)
+ */
+public function actionCreate(array $Customer)
+{
+	$customer = new Customer();
+	$customer->setAttributes($Customer);
+	$customer->save();
+
+	$this->sendResource($customer);
+}
+
+/**
+ * Renders the edit page for a customer
+ *
+ * If the request submits customer attributes, set those attributes on the customer
+ * and perform validation. sendResource() handles formatting the customer for all
+ * possible request types.
+ *
+ * @param int $customerId Customer ID (@get)
+ * @param array $Customer Customer attributes to validate (@post)
+ */
+public function actionEdit($customerId, array $Customer = null)
+{
+	$customer = $this->loadCustomerById($customerId);
+
+	if ($Customer !== null) {
+		$customer->setAttributes($Customer);
+		$customer->validate();
+	}
+
+	$this->sendResource($customer);
+}
 ```
 
 ### MIME / Format
