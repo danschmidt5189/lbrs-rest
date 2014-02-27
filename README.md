@@ -70,7 +70,7 @@ public function actionCreate(array $Customer)
 	$customer->setAttributes($Customer);
 	$customer->save();
 
-	$this->sendResource($customer);
+	return new ResourceResponse($customer);
 }
 
 /**
@@ -92,7 +92,7 @@ public function actionEdit($customerId, array $Customer = null)
 		$customer->validate();
 	}
 
-	$this->sendResource($customer);
+	return new ResourceResponse($customer);
 }
 ```
 
