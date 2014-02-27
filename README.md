@@ -1,27 +1,41 @@
-lbrs-rest
+Yii2 REST Support
 =========
 
-In-progress library of REST-related classes for the Yii framework.
+Goals:
 
-Currently, this is primarily a set of interfaces that define the concept of a
-"Resource" and its representations in different formats.
+1. Provide a simple interface that classes can implement to allow conversion to
+arbitrary MIME types.
+2. Provide a special Response class that handles common use-cases regarding sending
+resources to the client. (E.g. partials on Ajax, content-type negotiation, etc.)
 
-The goal is:
+### ConvertableInterface
 
-1. Model classes that can easily convert themselves to different representations
-(json, xml, html, etc.).
-2. Controllers that can intelligently select the correct format in which to return
-resources, handling HTTP-related issues automatically. (E.g. status codes based
-on the resource state.)
-
-### Resources
-
-Resources represent classes that implement the `SerializableResourceInterface`.
-
-The killer feature of this interface is the ability of objects implementing it
-to represent themselves in any number of arbitrary formats, e.g.:
+The heart of Resource functionality is in the `ConvertableInterface`:
 
 ```php
+/**
+ * @return string Object converted to a string of the given MIME type
+ */
+public function convertTo($mimeType, $options = array());
+
+/**
+ * @return bool Whether the object is convertable to the given type
+ */
+public function isConvertableTo($mimeType, $options = array());
+```
+
+The `ResourceInterface` extends this interface with new methods that determine
+the ID of the resource as well as its "freshness". (Whether it has been modified
+since a certain time.)
+
+An additional resource, `SerializableResourceInterface`, further extends it with
+the native `Serializable` and `JsonSerializable` interfaces, as well as `Arrayable`.
+
+Some thoughts on usage:
+
+```php
+$resource = new ClassImplementingResourceInterface();
+
 // Attributes, errors, and metadata as JSON
 echo $resource->convertTo(MIME::JSON);
 echo json_encode($resource);
@@ -44,61 +58,48 @@ Resources also know what types they can be converted to, so that in your control
 you could do something like this:
 
 ```php
-if (!$resource->isConvertibleTo(MIME::JSON)) {
+if (!$this->resource->isConvertibleTo(MIME::JSON)) {
 	throw new NotAcceptableHttpException();
 }
 ```
 
-### Resource Controller
+### ActiveResource
 
-The goal of the ResourceController is to reduce boilerplate code, like sending
-different error formats to JSON requests, setting flash messages, or rendering
-partials on Ajax requests.
+`ActiveResource << yii\db\ActiveRecord` represents ActiveRecord classes that
+are also resources. You get all the sugar of AR, including relational mappings,
+plus the promise that the record can be converted into different formats.
 
-Ideally, most actions would just have to load a resource, optionally act on that
-resource (e.g. by invoking a method on it), and then responding with the resource:
+### ResourceResponse
+
+The `ResourceResponse` reduces boilerplate code and allows easily sending Resources
+as a response. The default behavior should support:
+
+1. Content-type negotiation via Accept header or "_format" request parameter
+2. Rendering views on requests for "text/html".
+3. Rendering partials on requests for "text/partial+html".
+4. Rendering json/xml/etc. on other requests.
+
+(This is inspired by `Responders` in Ruby on Rails 4.)
+
+Its use in a controller might look like this:
 
 ```php
-/**
- * Creates a new customer in the database
- *
- * @param array $Customer Customer attributes (@post)
- */
 public function actionCreate(array $Customer)
 {
-	$customer = new Customer();
+	// Immediately throws 406 Not Acceptable if the resource can't be converted
+	// to an acceptable type.
+	$response = new ResourceResponse(($customer = new Customer()));
+
+	// Do your thing
 	$customer->setAttributes($Customer);
 	$customer->save();
 
-	return new ResourceResponse($customer);
+	// Response inspects resource state and the request to determine how to respond
+	return $response;
 }
 
-/**
- * Renders the edit page for a customer
- *
- * If the request submits customer attributes, set those attributes on the customer
- * and perform validation. sendResource() handles formatting the customer for all
- * possible request types.
- *
- * @param int $customerId Customer ID (@get)
- * @param array $Customer Customer attributes to validate (@post)
- */
-public function actionEdit($customerId, array $Customer = null)
-{
-	$customer = $this->loadCustomerById($customerId);
+// similar to (but more powerful than)...
 
-	if ($Customer !== null) {
-		$customer->setAttributes($Customer);
-		$customer->validate();
-	}
-
-	return new ResourceResponse($customer);
-}
-```
-
-The logic represented above would essentially be equivalent to this:
-
-```php
 public function actionCreate(array $Customer)
 {
 	$customer = new Customer();
@@ -123,9 +124,6 @@ public function actionCreate(array $Customer)
 	}
 }
 ```
-
-... except that the actual logic is delegated to `Responder` classes, which can
-be overridden or customized by developers.
 
 ### MIME / Format
 
